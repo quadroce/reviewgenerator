@@ -29,6 +29,12 @@
 
                 const filmCasuale = response.data;
 
+                // Controlla se il film ha un'immagine e può essere recensito
+                if (!filmCasuale.Poster || filmCasuale.Response === "False") {
+                    // Cerca un altro film
+                    return generaRecensione();
+                }
+
                 // Genera una recensione casuale
                 var recensione = "Titolo: " + filmCasuale.Title + "<br>";
                 recensione += "Genere: " + filmCasuale.Genre + "<br>";
@@ -84,16 +90,18 @@
             }
         }
 
-        // Genera una recensione casuale
-        generaRecensione()
-            .then((recensioneCasuale) => {
-                // Aggiungi la recensione casuale al div con id "recensione-casuale"
-                var recensioneCasualeDiv = document.getElementById("recensione-casuale");
-                recensioneCasualeDiv.innerHTML = recensioneCasuale;
-            })
-            .catch((error) => {
-                console.error("Errore durante la generazione della recensione casuale:", error);
-            });
+        // Genera una recensione casuale ogni minuto
+        setInterval(function() {
+            generaRecensione()
+                .then((recensioneCasuale) => {
+                    // Aggiungi la recensione casuale al div con id "recensione-casuale"
+                    var recensioneCasualeDiv = document.getElementById("recensione-casuale");
+                    recensioneCasualeDiv.innerHTML = recensioneCasuale;
+                })
+                .catch((error) => {
+                    console.error("Errore durante la generazione della recensione casuale:", error);
+                });
+        }, 60000);
 
     </script>
 </head>
