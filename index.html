@@ -27,7 +27,8 @@
                 const response = await axios.get('https://www.omdbapi.com/', {
                     params: {
                         i: filmID,
-                        apikey: '8a6b6167' // Sostituisci con la tua chiave API OMDB
+                        apikey: '8a6b6167', // Sostituisci con la tua chiave API OMDB
+                        type: movie
                     }
                 });
 
