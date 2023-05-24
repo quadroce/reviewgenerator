@@ -24,7 +24,7 @@
                 const filmID = generaFilmIDCasuale();
 
                 // Ottieni il film dall'OMDB API utilizzando l'ID
-                const response = await axios.get('http://www.omdbapi.com/', {
+                const response = await axios.get('https://www.omdbapi.com/', {
                     params: {
                         i: filmID,
                         apikey: '8a6b6167' // Sostituisci con la tua chiave API OMDB
