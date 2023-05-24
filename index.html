@@ -11,11 +11,14 @@
         // Funzione per generare una recensione casuale
         async function generaRecensione() {
             try {
-                // Ottieni un film casuale dall'OMDB API
-                const response = await axios.get('https://www.omdbapi.com/', {
+                // ID del film da recuperare dall'OMDB API
+                const filmID = "tt3896198";
+
+                // Ottieni il film dall'OMDB API utilizzando l'ID
+                const response = await axios.get('http://www.omdbapi.com/', {
                     params: {
-                        apikey: '8a6b6167', // Sostituisci con la tua chiave API OMDB
-                        type: 'movie', // Puoi anche utilizzare 'series' per le serie TV
+                        i: filmID,
+                        apikey: '8a6b6167' // Sostituisci con la tua chiave API OMDB
                     }
                 });
 
