@@ -8,22 +8,23 @@
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
+        // Funzione per generare un filmID casuale
+        function generaFilmIDCasuale() {
+            var filmID = "tt";
+            for (var i = 0; i < 7; i++) {
+                filmID += Math.floor(Math.random() * 10);
+            }
+            return filmID;
+        }
+
         // Funzione per generare una recensione casuale
         async function generaRecensione() {
             try {
-                // ID del film da recuperare dall'OMDB API
-                // Funzione per generare un filmID casuale
-function generaFilmIDCasuale() {
-  var filmID = "tt";
-  for (var i = 0; i < 7; i++) {
-    filmID += Math.floor(Math.random() * 10);
-  }
-  return filmID;
-}
-
+                // ID del film casuale da recuperare dall'OMDB API
+                const filmID = generaFilmIDCasuale();
 
                 // Ottieni il film dall'OMDB API utilizzando l'ID
-                const response = await axios.get('https://www.omdbapi.com/', {
+                const response = await axios.get('http://www.omdbapi.com/', {
                     params: {
                         i: filmID,
                         apikey: '8a6b6167' // Sostituisci con la tua chiave API OMDB
@@ -38,7 +39,7 @@ function generaFilmIDCasuale() {
                 recensione += "Regista: " + filmCasuale.Director + "<br>";
                 recensione += "Valutazione: " + filmCasuale.imdbRating + "<br>";
                 recensione += "Descrizione: " + filmCasuale.Plot + "<br>";
-                recensione += <img src="filmCasuale.Poster" /> ;
+                recensione += "Poster: " + filmCasuale.Poster + "<br>";
 
                 return recensione;
             } catch (error) {
@@ -52,15 +53,4 @@ function generaFilmIDCasuale() {
             .then((recensioneCasuale) => {
                 // Aggiungi la recensione generata al div con id "recensione"
                 var recensioneDiv = document.getElementById("recensione");
-                recensioneDiv.innerHTML = recensioneCasuale;
-            })
-            .catch((error) => {
-                console.error("Errore durante la generazione della recensione:", error);
-            });
-    </script>
-</head>
-<body>
-    <h1>Recensione di un film</h1>
-    <div id="recensione"></div>
-</body>
-</html>
+                recensioneDiv.innerHTML = recensioneCasuale
