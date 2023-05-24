@@ -12,7 +12,7 @@
         async function generaRecensione() {
             try {
                 // Ottieni un film casuale dall'OMDB API
-                const response = await axios.get('http://www.omdbapi.com/', {
+                const response = await axios.get('https://www.omdbapi.com/', {
                     params: {
                         apikey: '8a6b6167', // Sostituisci con la tua chiave API OMDB
                         type: 'movie', // Puoi anche utilizzare 'series' per le serie TV
