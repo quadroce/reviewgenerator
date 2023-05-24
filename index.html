@@ -12,7 +12,15 @@
         async function generaRecensione() {
             try {
                 // ID del film da recuperare dall'OMDB API
-                const filmID = "tt3896198";
+                // Funzione per generare un filmID casuale
+function generaFilmIDCasuale() {
+  var filmID = "tt";
+  for (var i = 0; i < 7; i++) {
+    filmID += Math.floor(Math.random() * 10);
+  }
+  return filmID;
+}
+
 
                 // Ottieni il film dall'OMDB API utilizzando l'ID
                 const response = await axios.get('https://www.omdbapi.com/', {
@@ -30,7 +38,7 @@
                 recensione += "Regista: " + filmCasuale.Director + "<br>";
                 recensione += "Valutazione: " + filmCasuale.imdbRating + "<br>";
                 recensione += "Descrizione: " + filmCasuale.Plot + "<br>";
-                recensione += "Poster: " + filmCasuale.Poster + "<br>";
+                recensione += "Poster: " + <img src="filmCasuale.Poster" /> + "<br>";
 
                 return recensione;
             } catch (error) {
