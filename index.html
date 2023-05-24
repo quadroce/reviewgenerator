@@ -53,4 +53,15 @@
             .then((recensioneCasuale) => {
                 // Aggiungi la recensione generata al div con id "recensione"
                 var recensioneDiv = document.getElementById("recensione");
-                recensioneDiv.innerHTML = recensioneCasuale
+                recensioneDiv.innerHTML = recensioneCasuale;
+            })
+            .catch((error) => {
+                console.error("Errore durante la generazione della recensione:", error);
+            });
+    </script>
+</head>
+<body>
+    <h1>Recensione di un film</h1>
+    <div id="recensione"></div>
+</body>
+</html>
