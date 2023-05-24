@@ -6,69 +6,50 @@
     <title>Page Title</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
-      <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-// Utilizza il client HTTP Axios per effettuare richieste
-const axios = require('axios');
+        // Funzione per generare una recensione casuale
+        async function generaRecensione() {
+            try {
+                // Ottieni un film casuale dall'OMDB API
+                const response = await axios.get('http://www.omdbapi.com/', {
+                    params: {
+                        apikey: '8a6b6167', // Sostituisci con la tua chiave API OMDB
+                        type: 'movie', // Puoi anche utilizzare 'series' per le serie TV
+                    }
+                });
 
-// Funzione per generare una recensione casuale
-async function generaRecensione() {
-  try {
-    // Ottieni un film casuale dall'OMDB API
-    const response = await axios.get('http://www.omdbapi.com/', {
-      params: {
-        apikey: '8a6b6167', // Sostituisci con la tua chiave API OMDB
-        type: 'movie', // Puoi anche utilizzare 'series' per le serie TV
-      }
-    });
+                const filmCasuale = response.data;
 
-    const filmCasuale = response.data;
+                // Genera una recensione casuale
+                var recensione = "Titolo: " + filmCasuale.Title + "<br>";
+                recensione += "Genere: " + filmCasuale.Genre + "<br>";
+                recensione += "Regista: " + filmCasuale.Director + "<br>";
+                recensione += "Valutazione: " + filmCasuale.imdbRating + "<br>";
+                recensione += "Descrizione: " + filmCasuale.Plot + "<br>";
+                recensione += "Poster: " + filmCasuale.Poster + "<br>";
 
-    // Genera una recensione casuale
-    var recensione = "Titolo: " + filmCasuale.Title + "\n";
-    recensione += "Genere: " + filmCasuale.Genre + "\n";
-    recensione += "Regista: " + filmCasuale.Director + "\n";
-    recensione += "Valutazione: " + filmCasuale.imdbRating + "\n";
-    recensione += "Descrizione: " + filmCasuale.Plot + "\n";
-    recensione += "Poster: " + filmCasuale.Poster + "\n";
+                return recensione;
+            } catch (error) {
+                console.error("Errore durante la richiesta all'OMDB API:", error.message);
+                return null;
+            }
+        }
 
-    return recensione;
-  } catch (error) {
-    console.error("Errore durante la richiesta all'OMDB API:", error.message);
-    return null;
-  }
-}
-
-// Esegui la funzione asincrona per generare una recensione casuale
-generaRecensione()
-  .then((recensioneCasuale) => {
-    // Stampa la recensione
-    console.log(recensioneCasuale);
-  })
-  .catch((error) => {
-    console.error("Errore durante la generazione della recensione:", error);
-  });
-
-  var recensioneGenerata = "Titolo: Il Padrino<br>" +
-                               "Genere: Crime, Drama<br>" +
-                               "Regista: Francis Ford Coppola<br>" +
-                               "Valutazione: 9.2<br>" +
-                               "Descrizione: Un classico del cinema che narra la storia della famiglia mafiosa Corleone e del suo capo, Vito Corleone.";
-  
-      // Aggiungi la recensione generata al div con id "recensione"
-      var recensioneDiv = document.getElementById("recensione");
-      recensioneDiv.innerHTML = recensioneGenerata;
-
-
+        // Esegui la funzione asincrona per generare una recensione casuale
+        generaRecensione()
+            .then((recensioneCasuale) => {
+                // Aggiungi la recensione generata al div con id "recensione"
+                var recensioneDiv = document.getElementById("recensione");
+                recensioneDiv.innerHTML = recensioneCasuale;
+            })
+            .catch((error) => {
+                console.error("Errore durante la generazione della recensione:", error);
+            });
     </script>
 </head>
 <body>
-    
     <h1>Recensione di un film</h1>
-
     <div id="recensione"></div>
-  
-    
 </body>
 </html>
