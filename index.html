@@ -8,6 +8,9 @@
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
+        // Array per memorizzare i film recensiti
+        var elencoFilmRecensiti = [];
+
         // Funzione per generare il tag HTML dell'immagine del poster
         function generaTagImmaginePoster(posterURL) {
             return '<img src="' + posterURL + '" alt="Poster">';
@@ -42,6 +45,9 @@
                 recensione += "Valutazione: " + filmCasuale.imdbRating + "<br>";
                 recensione += "Descrizione: " + filmCasuale.Plot + "<br>";
                 recensione += "Poster: " + generaTagImmaginePoster(filmCasuale.Poster) + "<br>";
+
+                // Aggiungi il film recensito all'elenco
+                elencoFilmRecensiti.push(filmCasuale);
 
                 return recensione;
             } catch (error) {
@@ -111,7 +117,7 @@
     <h2>Recensione casuale</h2>
     <div id="recensione-casuale"></div>
     
-    <h2>Genera recensione con ChatGPTz</h2>
+    <h2>Genera recensione con ChatGPT</h2>
     <form onsubmit="event.preventDefault(); generaRecensioneChatGPT();">
         <label for="titolo-film">Titolo del film:</label>
         <input type="text" id="titolo-film" name="titolo-film" required>
@@ -123,5 +129,25 @@
     </form>
     
     <div id="recensione-chatgpt"></div>
+
+    <h2>Elenco film recensiti</h2>
+    <ul id="elenco-film"></ul>
+
+    <script>
+        // Funzione per aggiornare l'elenco dei film recensiti
+        function aggiornaElencoFilmRecensiti() {
+            var elencoFilmUl = document.getElementById("elenco-film");
+            elencoFilmUl.innerHTML = "";
+
+            elencoFilmRecensiti.forEach(function(film) {
+                var li = document.createElement("li");
+                li.innerHTML = film.Title;
+                elencoFilmUl.appendChild(li);
+            });
+        }
+
+        // Aggiorna l'elenco dei film recensiti all'avvio
+        aggiornaElencoFilmRecensiti();
+    </script>
 </body>
 </html>
