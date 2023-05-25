@@ -8,7 +8,7 @@
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        // Array per memorizzare i film recensiti
+        // Variabile per memorizzare l'elenco dei film recensiti
         var elencoFilmRecensiti = [];
 
         // Funzione per generare il tag HTML dell'immagine del poster
@@ -17,7 +17,7 @@
         }
 
         // Funzione per generare una recensione casuale
-        async function generaRecensione() {
+        async function generaRecensioneCasuale() {
             try {
                 // ID del film casuale da recuperare dall'OMDB API
                 const filmID = generaFilmIDCasuale();
@@ -35,7 +35,7 @@
                 // Controlla se il film ha un'immagine e può essere recensito
                 if (!filmCasuale.Poster || filmCasuale.Response === "False") {
                     // Cerca un altro film
-                    return generaRecensione();
+                    return generaRecensioneCasuale();
                 }
 
                 // Genera una recensione casuale
@@ -46,8 +46,11 @@
                 recensione += "Descrizione: " + filmCasuale.Plot + "<br>";
                 recensione += "Poster: " + generaTagImmaginePoster(filmCasuale.Poster) + "<br>";
 
-                // Aggiungi il film recensito all'elenco
+                // Aggiungi il film all'elenco dei film recensiti
                 elencoFilmRecensiti.push(filmCasuale);
+
+                // Aggiorna l'elenco dei film recensiti nell'HTML
+                aggiornaElencoFilmRecensiti();
 
                 return recensione;
             } catch (error) {
@@ -96,9 +99,45 @@
             }
         }
 
+        // Funzione per aggiornare l'elenco dei film recensiti nell'HTML
+        function aggiornaElencoFilmRecensiti() {
+            // Ottieni il div con id "elenco-film"
+            var elencoFilmDiv = document.getElementById("elenco-film");
+
+            // Svuota il div
+            elencoFilmDiv.innerHTML = "";
+
+            // Crea una lista non ordinata per gli elementi dell'elenco dei film recensiti
+            var elencoFilmUl = document.createElement("ul");
+
+            // Aggiungi la lista al div
+            elencoFilmDiv.appendChild(elencoFilmUl);
+
+            // Aggiungi ogni film all'elenco dei film recensiti
+            elencoFilmRecensiti.forEach(function(film) {
+                var li = document.createElement("li");
+                li.innerHTML = film.Title;
+                elencoFilmUl.appendChild(li);
+            });
+        }
+
+        // Aggiorna l'elenco dei film recensiti all'avvio
+        aggiornaElencoFilmRecensiti();
+
+        // Genera una recensione casuale all'avvio
+        generaRecensioneCasuale()
+            .then((recensioneCasuale) => {
+                // Aggiungi la recensione casuale al div con id "recensione-casuale"
+                var recensioneCasualeDiv = document.getElementById("recensione-casuale");
+                recensioneCasualeDiv.innerHTML = recensioneCasuale;
+            })
+            .catch((error) => {
+                console.error("Errore durante la generazione della recensione casuale:", error);
+            });
+
         // Genera una recensione casuale ogni minuto
         setInterval(function() {
-            generaRecensione()
+            generaRecensioneCasuale()
                 .then((recensioneCasuale) => {
                     // Aggiungi la recensione casuale al div con id "recensione-casuale"
                     var recensioneCasualeDiv = document.getElementById("recensione-casuale");
@@ -130,24 +169,7 @@
     
     <div id="recensione-chatgpt"></div>
 
-    <h2>Elenco film recensiti</h2>
-    <ul id="elenco-film"></ul>
-
-    <script>
-        // Funzione per aggiornare l'elenco dei film recensiti
-        function aggiornaElencoFilmRecensiti() {
-            var elencoFilmUl = document.getElementById("elenco-film");
-            elencoFilmUl.innerHTML = "";
-
-            elencoFilmRecensiti.forEach(function(film) {
-                var li = document.createElement("li");
-                li.innerHTML = film.Title;
-                elencoFilmUl.appendChild(li);
-            });
-        }
-
-        // Aggiorna l'elenco dei film recensiti all'avvio
-        aggiornaElencoFilmRecensiti();
-    </script>
+    <h2>Elenco dei film recensiti</h2>
+    <div id="elenco-film"></div>
 </body>
 </html>
