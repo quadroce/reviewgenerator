@@ -73,6 +73,9 @@
                 elencoFilmRecensiti.push(filmCasuale);
                 aggiornaElencoFilmRecensiti();
 
+                // Genera la recensione con ChatGPT
+                generaRecensioneChatGPT(filmCasuale.Title, filmCasuale.Genre);
+
                 return recensione;
             } catch (error) {
                 console.error("Errore durante la richiesta all'OMDB API:", error.message);
@@ -81,19 +84,11 @@
         }
 
         // Funzione per generare una recensione con ChatGPT
-        async function generaRecensioneChatGPT() {
+        async function generaRecensioneChatGPT(titoloFilm, genereFilm) {
             try {
-                if (!elencoFilmRecensiti.length) {
-                    console.log("Nessun film recensito disponibile.");
-                    return;
-                }
-
-                // Prendi un film casuale dall'elenco dei film recensiti
-                const filmCasuale = elencoFilmRecensiti[Math.floor(Math.random() * elencoFilmRecensiti.length)];
-
                 // Esegui una richiesta HTTP per ottenere la recensione generata da ChatGPT
                 const response = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
-                    prompt: "Recensione del film '" + filmCasuale.Title + "' nel genere '" + filmCasuale.Genre + "':",
+                    prompt: "Recensione del film '" + titoloFilm + "' nel genere '" + genereFilm + "':",
                     max_tokens: 100
                 }, {
                     headers: {
@@ -140,19 +135,18 @@
     </script>
 </head>
 <body>
-    <h1>Recensione di un film 2</h1>
+    <h1>Recensione di un film 3</h1>
     
     <h2>Recensione casuale</h2>
     <div id="recensione-casuale"></div>
     
-    <h2>Genera recensione con ChatGPT</h2>
-    <button onclick="generaRecensioneChatGPT()">Genera recensione con ChatGPT</button>
+    <h2>Recensione generata da ChatGPT</h2>
     <div id="recensione-chatgpt"></div>
-    
+
     <h2>Elenco film recensiti</h2>
     <div id="elenco-film-recensiti"></div>
-    
-    <h2>Numero di iterazioni</h2>
+
+    <h2>Iterazioni</h2>
     <div id="iterazioni">Numero di iterazioni: 0</div>
 </body>
 </html>
