@@ -83,33 +83,32 @@
         // Funzione per generare una recensione con ChatGPT
         async function generaRecensioneChatGPT() {
             try {
-                // Genera una recensione casuale
-                const recensioneCasuale = await generaRecensioneCasuale();
+                if (!elencoFilmRecensiti.length) {
+                    console.log("Nessun film recensito disponibile.");
+                    return;
+                }
 
-                if (recensioneCasuale) {
-                    // Recupera i dettagli del film dalla recensione casuale
-                    const titoloFilm = recensioneCasuale.match(/Titolo: ([^\n]+)/)[1];
-                    const genereFilm = recensioneCasuale.match(/Genere: ([^\n]+)/)[1];
+                // Prendi un film casuale dall'elenco dei film recensiti
+                const filmCasuale = elencoFilmRecensiti[Math.floor(Math.random() * elencoFilmRecensiti.length)];
 
-                    // Esegui una richiesta HTTP per ottenere la recensione generata da ChatGPT
-                    const response = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
-                        prompt: "Recensione del film '" + titoloFilm + "' nel genere '" + genereFilm + "':",
-                        max_tokens: 100
-                    }, {
-                        headers: {
-                            'Authorization': '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', // Sostituisci con la tua chiave API di OpenAI
-                            'Content-Type': 'application/json'
-                        }
-                    });
-
-                    const completions = response.data.choices;
-                    if (completions.length > 0) {
-                        var recensioneChatGPT = completions[0].text.trim();
-
-                        // Aggiungi la recensione di ChatGPT al div con id "recensione-chatgpt"
-                        var recensioneChatGPTDiv = document.getElementById("recensione-chatgpt");
-                        recensioneChatGPTDiv.innerHTML = recensioneChatGPT;
+                // Esegui una richiesta HTTP per ottenere la recensione generata da ChatGPT
+                const response = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
+                    prompt: "Recensione del film '" + filmCasuale.Title + "' nel genere '" + filmCasuale.Genre + "':",
+                    max_tokens: 100
+                }, {
+                    headers: {
+                        'Authorization': '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', // Sostituisci con la tua chiave API di OpenAI
+                        'Content-Type': 'application/json'
                     }
+                });
+
+                const completions = response.data.choices;
+                if (completions.length > 0) {
+                    var recensioneChatGPT = completions[0].text.trim();
+
+                    // Aggiungi la recensione di ChatGPT al div con id "recensione-chatgpt"
+                    var recensioneChatGPTDiv = document.getElementById("recensione-chatgpt");
+                    recensioneChatGPTDiv.innerHTML = recensioneChatGPT;
                 }
             } catch (error) {
                 console.error("Errore durante la richiesta a ChatGPT:", error.message);
@@ -147,22 +146,12 @@
     <div id="recensione-casuale"></div>
     
     <h2>Genera recensione con ChatGPT</h2>
-    <form onsubmit="event.preventDefault(); generaRecensioneChatGPT();">
-        <label for="titolo-film">Titolo del film:</label>
-        <input type="text" id="titolo-film" name="titolo-film" required>
-        <br>
-        <label for="genere-film">Genere del film:</label>
-        <input type="text" id="genere-film" name="genere-film" required>
-        <br>
-        <button type="submit">Genera recensione</button>
-    </form>
-
-    <h2>Recensione generata da ChatGPT</h2>
+    <button onclick="generaRecensioneChatGPT()">Genera recensione con ChatGPT</button>
     <div id="recensione-chatgpt"></div>
-
+    
     <h2>Elenco film recensiti</h2>
     <div id="elenco-film-recensiti"></div>
-
+    
     <h2>Numero di iterazioni</h2>
     <div id="iterazioni">Numero di iterazioni: 0</div>
 </body>
