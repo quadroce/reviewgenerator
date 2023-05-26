@@ -49,6 +49,7 @@
                 const response = await axios.get('https://www.omdbapi.com/', {
                     params: {
                         i: filmID,
+                         type: 'movie',
                         apikey: '8a6b6167' // Sostituisci con la tua chiave API OMDB
                     }
                 });
@@ -135,7 +136,7 @@
     </script>
 </head>
 <body>
-    <h1>Recensione di un film 3</h1>
+    <h1>Recensione di un film 4</h1>
     
     <h2>Recensione casuale</h2>
     <div id="recensione-casuale"></div>
