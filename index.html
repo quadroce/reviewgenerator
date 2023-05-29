@@ -48,6 +48,7 @@
 
                 // Aggiungi il film recensito all'elenco
                 elencoFilmRecensiti.push(filmCasuale);
+                aggiornaElencoFilmRecensiti();
 
                 return recensione;
             } catch (error) {
@@ -66,15 +67,11 @@
         }
 
         // Funzione per ottenere una recensione generata da ChatGPT
-        async function generaRecensioneChatGPT() {
+        async function generaRecensioneChatGPT(filmCasuale) {
             try {
-                // Recupera i dettagli del film dal form
-                var titoloFilm = document.getElementById("titolo-film").value;
-                var genereFilm = document.getElementById("genere-film").value;
-
                 // Esegui una richiesta HTTP per ottenere la recensione generata da ChatGPT
                 const response = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
-                    prompt: "Recensione del film '" + titoloFilm + "' nel genere '" + genereFilm + "':",
+                    prompt: "Recensione del film '" + filmCasuale.Title + "' nel genere '" + filmCasuale.Genre + "':",
                     max_tokens: 100
                 }, {
                     headers: {
@@ -103,6 +100,9 @@
                     // Aggiungi la recensione casuale al div con id "recensione-casuale"
                     var recensioneCasualeDiv = document.getElementById("recensione-casuale");
                     recensioneCasualeDiv.innerHTML = recensioneCasuale;
+
+                    // Genera la recensione con ChatGPT
+                    generaRecensioneChatGPT(elencoFilmRecensiti[elencoFilmRecensiti.length - 1]);
                 })
                 .catch((error) => {
                     console.error("Errore durante la generazione della recensione casuale:", error);
@@ -118,16 +118,6 @@
     <div id="recensione-casuale"></div>
     
     <h2>Genera recensione con ChatGPT</h2>
-    <form onsubmit="event.preventDefault(); generaRecensioneChatGPT();">
-        <label for="titolo-film">Titolo del film:</label>
-        <input type="text" id="titolo-film" name="titolo-film" required>
-        <br>
-        <label for="genere-film">Genere del film:</label>
-        <input type="text" id="genere-film" name="genere-film" required>
-        <br>
-        <button type="submit">Genera recensione</button>
-    </form>
-    
     <div id="recensione-chatgpt"></div>
 
     <h2>Elenco film recensiti</h2>
