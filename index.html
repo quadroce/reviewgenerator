@@ -108,6 +108,9 @@
                 console.error("Errore durante la generazione della recensione casuale:", error);
             });
 
+        // Genera una recensione con ChatGPT all'avvio
+        generaRecensioneChatGPT(filmCasuale, "");
+
     </script>
 </head>
 <body>
@@ -117,12 +120,6 @@
     <div id="recensione-casuale"></div>
     
     <h2>Genera recensione con ChatGPT</h2>
-    <form onsubmit="event.preventDefault(); generaRecensioneChatGPT(filmCasuale, filmGenere.value);">
-        
-        <br>
-        <button type="submit">Genera recensione</button>
-    </form>
-    
     <div id="elenco-recensioni-film"></div>
 </body>
 </html>
