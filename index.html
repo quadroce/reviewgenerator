@@ -1,134 +1,153 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        .recensione {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 20px;
-        }
-
-        .film-details {
-            margin-bottom: 10px;
-        }
-
-        .film-details b {
-            margin-right: 5px;
-        }
-
-        .film-details img {
-            max-width: 200px;
-            margin-top: 10px;
-        }
-    </style>
-</head>
-<body>
-    <h2>Genera recensione casuale con ChatGPT f</h2>
-    <div id="recensione-chatgpt"></div>
-    <h3>Elenco dei film recensiti:</h3>
-    <div id="elenco-film-recensiti"></div>
-
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        // Funzione per generare una tag di immagine per il poster
-        function generaTagImmaginePoster(url) {
-            return "<img src='" + url + "' alt='Poster'>";
-        }
-
-        // Funzione per generare una recensione con ChatGPT
-        async function generaRecensioneChatGPT(titoloFilm, genereFilm) {
-            try {
-                // Genera la recensione utilizzando l'API di ChatGPT
-                const response = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
-                    prompt: "Recensione del film " + titoloFilm + " di genere " + genereFilm + ":\n\nRecensione:",
-                    max_tokens: 100,
-                    temperature: 0.7,
-                    n: 1,
-                    stop: "\n"
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': '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' // Sostituisci con la tua chiave API OpenAI
-                    }
-                });
-
-                const completions = response.data.choices;
-                const recensioneChatGPT = completions[0].text.trim();
-
-                // Aggiungi la recensione generata all'HTML
-                var recensioneChatGPTDiv = document.getElementById("recensione-chatgpt");
-                recensioneChatGPTDiv.innerHTML = "<h3>Recensione generata con ChatGPT:</h3>" + recensioneChatGPT;
-            } catch (error) {
-                console.error("Errore durante la richiesta:", error.message);
-            }
-        }
-
+        // Array per memorizzare i film recensiti
         var elencoFilmRecensiti = [];
 
-        // Funzione per aggiornare l'elenco dei film recensiti nell'HTML
-        function aggiornaElencoFilmRecensiti() {
-            var elencoFilmRecensitiDiv = document.getElementById("elenco-film-recensiti");
-            elencoFilmRecensitiDiv.innerHTML = "";
-
-            elencoFilmRecensiti.forEach(function(film) {
-                var filmDetails = document.createElement("div");
-                filmDetails.className = "film-details";
-                filmDetails.innerHTML = "<b>Titolo:</b> " + film.Title + "<br>" +
-                                        "<b>Genere:</b> " + film.Genre + "<br>" +
-                                        "<b>Regista:</b> " + film.Director + "<br>" +
-                                        "<b>Valutazione:</b> " + film.imdbRating + "<br>" +
-                                        "<b>Descrizione:</b> " + film.Plot + "<br>" +
-                                        "<b>Poster:</b> " + generaTagImmaginePoster(film.Poster);
-
-                elencoFilmRecensitiDiv.appendChild(filmDetails);
-            });
+        // Funzione per generare il tag HTML dell'immagine del poster
+        function generaTagImmaginePoster(posterURL) {
+            return '<img src="' + posterURL + '" alt="Poster">';
         }
 
         // Funzione per generare una recensione casuale
-        async function generaRecensioneCasuale() {
+        async function generaRecensione() {
             try {
-                // Ottieni un film casuale dall'OMDB API
-                const omdbResponse = await axios.get('https://www.omdbapi.com/', {
+                // ID del film casuale da recuperare dall'OMDB API
+                const filmID = generaFilmIDCasuale();
+
+                // Ottieni il film dall'OMDB API utilizzando l'ID
+                const response = await axios.get('https://www.omdbapi.com/', {
                     params: {
-                       
-                        apiKey: '8a6b6167' // Sostituisci con la tua chiave API OMDB
+                        i: filmID,
+                        apikey: '8a6b6167' // Sostituisci con la tua chiave API OMDB
                     }
                 });
 
-                const filmCasuale = omdbResponse.data;
+                const filmCasuale = response.data;
 
                 // Controlla se il film ha un'immagine e può essere recensito
                 if (!filmCasuale.Poster || filmCasuale.Response === "False") {
                     // Cerca un altro film
-                    return generaRecensioneCasuale();
+                    return generaRecensione();
                 }
 
                 // Genera una recensione casuale
-                var recensione = "<div class='recensione'>";
-                recensione += "<div class='film-details'><b>Titolo:</b> " + filmCasuale.Title + "</div>";
-                recensione += "<div class='film-details'><b>Genere:</b> " + filmCasuale.Genre + "</div>";
-                recensione += "<div class='film-details'><b>Regista:</b> " + filmCasuale.Director + "</div>";
-                recensione += "<div class='film-details'><b>Valutazione:</b> " + filmCasuale.imdbRating + "</div>";
-                recensione += "<div class='film-details'><b>Descrizione:</b> " + filmCasuale.Plot + "</div>";
-                recensione += "<div class='film-details'><b>Poster:</b> " + generaTagImmaginePoster(filmCasuale.Poster) + "</div>";
-                recensione += "</div>";
+                var recensione = "Titolo: " + filmCasuale.Title + "<br>";
+                recensione += "Genere: " + filmCasuale.Genre + "<br>";
+                recensione += "Regista: " + filmCasuale.Director + "<br>";
+                recensione += "Valutazione: " + filmCasuale.imdbRating + "<br>";
+                recensione += "Descrizione: " + filmCasuale.Plot + "<br>";
+                recensione += "Poster: " + generaTagImmaginePoster(filmCasuale.Poster) + "<br>";
 
-                // Aggiungi il film all'elenco dei film recensiti
+                // Aggiungi il film recensito all'elenco
                 elencoFilmRecensiti.push(filmCasuale);
-                aggiornaElencoFilmRecensiti();
-
-                // Genera la recensione con ChatGPT
-                generaRecensioneChatGPT(filmCasuale.Title, filmCasuale.Genre);
 
                 return recensione;
             } catch (error) {
-                console.error("Errore durante la richiesta:", error.message);
+                console.error("Errore durante la richiesta all'OMDB API:", error.message);
                 return null;
             }
         }
 
-        // Genera una recensione casuale all'avvio
-        generaRecensioneCasuale();
+        // Funzione per generare un filmID casuale
+        function generaFilmIDCasuale() {
+            var filmID = "tt";
+            for (var i = 0; i < 7; i++) {
+                filmID += Math.floor(Math.random() * 10);
+            }
+            return filmID;
+        }
+
+        // Funzione per ottenere una recensione generata da ChatGPT
+        async function generaRecensioneChatGPT() {
+            try {
+                // Recupera i dettagli del film dal form
+                var titoloFilm = document.getElementById("titolo-film").value;
+                var genereFilm = document.getElementById("genere-film").value;
+
+                // Esegui una richiesta HTTP per ottenere la recensione generata da ChatGPT
+                const response = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
+                    prompt: "Recensione del film '" + titoloFilm + "' nel genere '" + genereFilm + "':",
+                    max_tokens: 100
+                }, {
+                    headers: {
+                        'Authorization': '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', // Sostituisci con la tua chiave API di OpenAI
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const completions = response.data.choices;
+                if (completions.length > 0) {
+                    var recensioneChatGPT = completions[0].text.trim();
+
+                    // Aggiungi la recensione di ChatGPT al div con id "recensione-chatgpt"
+                    var recensioneChatGPTDiv = document.getElementById("recensione-chatgpt");
+                    recensioneChatGPTDiv.innerHTML = recensioneChatGPT;
+                }
+            } catch (error) {
+                console.error("Errore durante la richiesta a ChatGPT:", error.message);
+            }
+        }
+
+        // Genera una recensione casuale ogni minuto
+        setInterval(function() {
+            generaRecensione()
+                .then((recensioneCasuale) => {
+                    // Aggiungi la recensione casuale al div con id "recensione-casuale"
+                    var recensioneCasualeDiv = document.getElementById("recensione-casuale");
+                    recensioneCasualeDiv.innerHTML = recensioneCasuale;
+                })
+                .catch((error) => {
+                    console.error("Errore durante la generazione della recensione casuale:", error);
+                });
+        }, 60000);
+
+    </script>
+</head>
+<body>
+    <h1>Recensione di un film</h1>
+    
+    <h2>Recensione casuale</h2>
+    <div id="recensione-casuale"></div>
+    
+    <h2>Genera recensione con ChatGPT</h2>
+    <form onsubmit="event.preventDefault(); generaRecensioneChatGPT();">
+        <label for="titolo-film">Titolo del film:</label>
+        <input type="text" id="titolo-film" name="titolo-film" required>
+        <br>
+        <label for="genere-film">Genere del film:</label>
+        <input type="text" id="genere-film" name="genere-film" required>
+        <br>
+        <button type="submit">Genera recensione</button>
+    </form>
+    
+    <div id="recensione-chatgpt"></div>
+
+    <h2>Elenco film recensiti</h2>
+    <ul id="elenco-film"></ul>
+
+    <script>
+        // Funzione per aggiornare l'elenco dei film recensiti
+        function aggiornaElencoFilmRecensiti() {
+            var elencoFilmUl = document.getElementById("elenco-film");
+            elencoFilmUl.innerHTML = "";
+
+            elencoFilmRecensiti.forEach(function(film) {
+                var li = document.createElement("li");
+                li.innerHTML = film.Title;
+                elencoFilmUl.appendChild(li);
+            });
+        }
+
+        // Aggiorna l'elenco dei film recensiti all'avvio
+        aggiornaElencoFilmRecensiti();
     </script>
 </body>
 </html>
