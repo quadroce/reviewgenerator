@@ -25,6 +25,8 @@
 <body>
     <h2>Genera recensione casuale con ChatGPT</h2>
     <div id="recensione-chatgpt"></div>
+    <h3>Elenco dei film recensiti:</h3>
+    <div id="elenco-film-recensiti"></div>
 
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
@@ -59,6 +61,27 @@
             } catch (error) {
                 console.error("Errore durante la richiesta:", error.message);
             }
+        }
+
+        var elencoFilmRecensiti = [];
+
+        // Funzione per aggiornare l'elenco dei film recensiti nell'HTML
+        function aggiornaElencoFilmRecensiti() {
+            var elencoFilmRecensitiDiv = document.getElementById("elenco-film-recensiti");
+            elencoFilmRecensitiDiv.innerHTML = "";
+
+            elencoFilmRecensiti.forEach(function(film) {
+                var filmDetails = document.createElement("div");
+                filmDetails.className = "film-details";
+                filmDetails.innerHTML = "<b>Titolo:</b> " + film.Title + "<br>" +
+                                        "<b>Genere:</b> " + film.Genre + "<br>" +
+                                        "<b>Regista:</b> " + film.Director + "<br>" +
+                                        "<b>Valutazione:</b> " + film.imdbRating + "<br>" +
+                                        "<b>Descrizione:</b> " + film.Plot + "<br>" +
+                                        "<b>Poster:</b> " + generaTagImmaginePoster(film.Poster);
+
+                elencoFilmRecensitiDiv.appendChild(filmDetails);
+            });
         }
 
         // Funzione per generare una recensione casuale
