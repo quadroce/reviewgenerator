@@ -65,7 +65,7 @@
                     max_tokens: 100
                 }, {
                     headers: {
-                        'Authorization': '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', // Sostituisci con la tua chiave API di OpenAI
+                        'Authorization': 'sk-8sd83dg6UVGlvrfbO8FT3BlbkFJErUbHJXGwiEXC96s4dll', // Sostituisci con la tua chiave API di OpenAI
                         'Content-Type': 'application/json'
                     }
                 });
@@ -97,18 +97,16 @@
             });
         }
 
-        // Genera una recensione casuale ogni minuto
-        setInterval(function() {
-            generaRecensioneCasuale(generaFilmIDCasuale())
-                .then((recensioneCasuale) => {
-                    // Aggiungi la recensione casuale al div con id "recensione-casuale"
-                    var recensioneCasualeDiv = document.getElementById("recensione-casuale");
-                    recensioneCasualeDiv.innerHTML = recensioneCasuale;
-                })
-                .catch((error) => {
-                    console.error("Errore durante la generazione della recensione casuale:", error);
-                });
-        }, 60000);
+        // Genera una recensione casuale all'avvio
+        generaRecensioneCasuale(filmCasuale)
+            .then((recensioneCasuale) => {
+                // Aggiungi la recensione casuale al div con id "recensione-casuale"
+                var recensioneCasualeDiv = document.getElementById("recensione-casuale");
+                recensioneCasualeDiv.innerHTML = recensioneCasuale;
+            })
+            .catch((error) => {
+                console.error("Errore durante la generazione della recensione casuale:", error);
+            });
 
     </script>
 </head>
@@ -119,30 +117,13 @@
     <div id="recensione-casuale"></div>
     
     <h2>Genera recensione con ChatGPT</h2>
-    <form onsubmit="event.preventDefault(); generaRecensioneChatGPT(titoloFilm.value, genereFilm.value);">
-        <label for="titolo-film">Titolo del film:</label>
-        <input type="text" id="titolo-film" name="titolo-film" required>
-        <br>
-        <label for="genere-film">Genere del film:</label>
-        <input type="text" id="genere-film" name="genere-film" required>
+    <form onsubmit="event.preventDefault(); generaRecensioneChatGPT(filmCasuale, filmGenere.value);">
+        <label for="film-genere">Genere del film:</label>
+        <input type="text" id="film-genere" name="film-genere" required>
         <br>
         <button type="submit">Genera recensione</button>
     </form>
     
     <div id="elenco-recensioni-film"></div>
-
-    <script>
-        // Funzione per generare un filmID casuale
-        function generaFilmIDCasuale() {
-            var filmID = "tt";
-            for (var i = 0; i < 7; i++) {
-                filmID += Math.floor(Math.random() * 10);
-            }
-            return filmID;
-        }
-
-        // Aggiorna l'elenco delle recensioni dei film all'avvio
-        aggiornaElencoRecensioniFilm();
-    </script>
 </body>
 </html>
