@@ -65,7 +65,7 @@
                     max_tokens: 100
                 }, {
                     headers: {
-                        'Authorization': 'sk-8sd83dg6UVGlvrfbO8FT3BlbkFJErUbHJXGwiEXC96s4dll', // Sostituisci con la tua chiave API di OpenAI
+                        'Authorization': 'Bearer sk-8sd83dg6UVGlvrfbO8FT3BlbkFJErUbHJXGwiEXC96s4dll', // Sostituisci con la tua chiave API di OpenAI
                         'Content-Type': 'application/json'
                     }
                 });
@@ -100,7 +100,7 @@
         // Genera una recensione casuale all'avvio
         async function iniziaRecensioneCasuale() {
             // Genera un film casuale
-            var filmCasuale = "tt1234567"; // Sostituisci "tt1234567" con l'ID del film casuale
+            var filmCasuale = await generaRecensioneCasuale("");
             var recensioneCasuale = await generaRecensioneCasuale(filmCasuale);
             
             // Aggiungi la recensione casuale al div con id "recensione-casuale"
@@ -117,7 +117,7 @@
     </script>
 </head>
 <body>
-    <h1>Recensione di un film 1.0</h1>
+    <h1>Recensione di un film</h1>
     
     <h2>Recensione casuale</h2>
     <div id="recensione-casuale"></div>
