@@ -59,9 +59,12 @@
         // Funzione per ottenere una recensione generata da ChatGPT per un film
         async function generaRecensioneChatGPT(titoloFilm, genereFilm) {
             try {
+                // Genera il prompt per ChatGPT
+                var prompt = "Puoi generare casualmente una recensione per il film '" + titoloFilm + "'";
+
                 // Esegui una richiesta HTTP per ottenere la recensione generata da ChatGPT
                 const response = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
-                    prompt: "Puoi fare la generare in modo casuale la Recensione del film '" + titoloFilm + "':",
+                    prompt: prompt,
                     max_tokens: 100
                 }, {
                     headers: {
@@ -79,6 +82,8 @@
 
                     // Aggiorna l'elenco delle recensioni dei film
                     aggiornaElencoRecensioniFilm();
+
+                    console.log("Prompt per ChatGPT:", prompt);
                 }
             } catch (error) {
                 console.error("Errore durante la richiesta a ChatGPT:", error.message);
