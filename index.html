@@ -101,8 +101,31 @@
                 elencoRecensioniFilmDiv.appendChild(div);
             });
         }
+        
+        // Funzione per generare un ID casuale di un film
+function generaIDFilmCasuale() {
+  var id = "tt";
+  var digits = "1234567890";
+  for (var i = 0; i < 7; i++) {
+    id += digits[Math.floor(Math.random() * digits.length)];
+  }
+  return id;
+}
 
-        // Genera una recensione casuale all'avvio
+// Utilizzo della funzione generaIDFilmCasuale per ottenere un film casuale
+var filmCasuale = generaIDFilmCasuale();
+
+
+        // Funzione per generare una nuova recensione ogni 20 secondi
+        function generaRecensioneOgni20Secondi() {
+            setInterval(function() {
+                // Genera un nuovo film casuale
+                var filmCasuale = generaRecensioneCasuale("");
+                generaRecensioneCasuale(filmCasuale);
+            }, 20000);
+        }
+
+        // Avvia il processo di generazione di recensioni all'avvio
         async function iniziaRecensioneCasuale() {
             // Genera un film casuale
             var filmCasuale = await generaRecensioneCasuale("");
@@ -114,6 +137,9 @@
             
             // Genera una recensione con ChatGPT
             generaRecensioneChatGPT(filmCasuale, "");
+
+            // Avvia la generazione di recensioni ogni 20 secondi
+            generaRecensioneOgni20Secondi();
         }
 
         // Avvia il processo di generazione di recensioni all'avvio
@@ -122,7 +148,7 @@
     </script>
 </head>
 <body>
-    <h1>Recensione di un film 2</h1>
+    <h1>Recensione di un film q.0</h1>
     
     <h2>Recensione casuale</h2>
     <div id="recensione-casuale"></div>
