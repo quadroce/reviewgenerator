@@ -61,7 +61,7 @@
             try {
                 // Esegui una richiesta HTTP per ottenere la recensione generata da ChatGPT
                 const response = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
-                    prompt: "Recensione del film '" + titoloFilm + "' nel genere '" + genereFilm + "':",
+                    prompt: "Puoi fare la generare in modo casuale la Recensione del film '" + titoloFilm + "':",
                     max_tokens: 100
                 }, {
                     headers: {
@@ -118,8 +118,7 @@
     
     <h2>Genera recensione con ChatGPT</h2>
     <form onsubmit="event.preventDefault(); generaRecensioneChatGPT(filmCasuale, filmGenere.value);">
-        <label for="film-genere">Genere del film:</label>
-        <input type="text" id="film-genere" name="film-genere" required>
+        
         <br>
         <button type="submit">Genera recensione</button>
     </form>
