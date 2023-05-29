@@ -97,27 +97,27 @@
             });
         }
 
-        // Definisci la variabile filmCasuale con un valore di film casuale
-        var filmCasuale = "tt1234567"; // Sostituisci "tt1234567" con l'ID del film casuale
-
         // Genera una recensione casuale all'avvio
-        generaRecensioneCasuale(filmCasuale)
-            .then((recensioneCasuale) => {
-                // Aggiungi la recensione casuale al div con id "recensione-casuale"
-                var recensioneCasualeDiv = document.getElementById("recensione-casuale");
-                recensioneCasualeDiv.innerHTML = recensioneCasuale;
-            })
-            .catch((error) => {
-                console.error("Errore durante la generazione della recensione casuale:", error);
-            });
+        async function iniziaRecensioneCasuale() {
+            // Genera un film casuale
+            var filmCasuale = "tt1234567"; // Sostituisci "tt1234567" con l'ID del film casuale
+            var recensioneCasuale = await generaRecensioneCasuale(filmCasuale);
+            
+            // Aggiungi la recensione casuale al div con id "recensione-casuale"
+            var recensioneCasualeDiv = document.getElementById("recensione-casuale");
+            recensioneCasualeDiv.innerHTML = recensioneCasuale;
+            
+            // Genera una recensione con ChatGPT
+            generaRecensioneChatGPT(filmCasuale, "");
+        }
 
-        // Genera una recensione con ChatGPT all'avvio
-        generaRecensioneChatGPT(filmCasuale, "");
+        // Avvia il processo di generazione di recensioni all'avvio
+        iniziaRecensioneCasuale();
 
     </script>
 </head>
 <body>
-    <h1>Recensione di un film ss</h1>
+    <h1>Recensione di un film 1.0</h1>
     
     <h2>Recensione casuale</h2>
     <div id="recensione-casuale"></div>
