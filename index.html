@@ -10,10 +10,28 @@
     <script>
         // Array per memorizzare le recensioni dei film
         var recensioniFilm = [];
+        var iterazioni = 0;
 
         // Funzione per generare il tag HTML dell'immagine del poster
         function generaTagImmaginePoster(posterURL) {
             return '<img src="' + posterURL + '" alt="Poster">';
+        }
+
+        // Funzione per generare un ID univoco per un film
+        function generaIDFilmUnivoco() {
+            var id = "tt";
+            var digits = "1234567890";
+            for (var i = 0; i < 7; i++) {
+                id += digits[Math.floor(Math.random() * digits.length)];
+            }
+            // Verifica se l'ID è già presente nell'array delle recensioni dei film
+            if (recensioniFilm.some(function(recensione) {
+                return recensione.includes(id);
+            })) {
+                // Genera un nuovo ID se l'attuale è duplicato
+                return generaIDFilmUnivoco();
+            }
+            return id;
         }
 
         // Funzione per generare una recensione casuale per un film
@@ -101,59 +119,51 @@
                 elencoRecensioniFilmDiv.appendChild(div);
             });
         }
-        
-        // Funzione per generare un ID casuale di un film
-function generaIDFilmCasuale() {
-  var id = "tt";
-  var digits = "1234567890";
-  for (var i = 0; i < 7; i++) {
-    id += digits[Math.floor(Math.random() * digits.length)];
-  }
-  return id;
-}
 
-// Utilizzo della funzione generaIDFilmCasuale per ottenere un film casuale
-var filmCasuale = generaIDFilmCasuale();
+        // Funzione per generare una nuova recensione
+        async function generaNuovaRecensione() {
+            iterazioni++;
+            document.getElementById("numero-iterazioni").innerHTML = "Numero di iterazioni: " + iterazioni;
 
+            // Genera un nuovo film casuale
+            var filmCasuale = generaIDFilmUnivoco();
+            var recensioneCasuale = await generaRecensioneCasuale(filmCasuale);
 
-        // Funzione per generare una nuova recensione ogni 20 secondi
-        function generaRecensioneOgni20Secondi() {
-            setInterval(function() {
-                // Genera un nuovo film casuale
-                var filmCasuale = generaRecensioneCasuale("");
-                generaRecensioneCasuale(filmCasuale);
-            }, 1000);
+            // Aggiungi la recensione casuale al div con id "recensione-casuale"
+            var recensioneCasualeDiv = document.getElementById("recensione-casuale");
+            recensioneCasualeDiv.innerHTML = recensioneCasuale;
+
+            // Genera una recensione con ChatGPT
+            generaRecensioneChatGPT(filmCasuale, "");
+
+            // Avvia la generazione di una nuova recensione ogni 20 secondi
+            setTimeout(generaNuovaRecensione, 20000);
         }
 
         // Avvia il processo di generazione di recensioni all'avvio
         async function iniziaRecensioneCasuale() {
             // Genera un film casuale
-            var filmCasuale = await generaRecensioneCasuale("");
+            var filmCasuale = generaIDFilmUnivoco();
             var recensioneCasuale = await generaRecensioneCasuale(filmCasuale);
-            
+
             // Aggiungi la recensione casuale al div con id "recensione-casuale"
             var recensioneCasualeDiv = document.getElementById("recensione-casuale");
             recensioneCasualeDiv.innerHTML = recensioneCasuale;
-            
+
             // Genera una recensione con ChatGPT
             generaRecensioneChatGPT(filmCasuale, "");
 
-            // Avvia la generazione di recensioni ogni 20 secondi
-            generaRecensioneOgni20Secondi();
+            // Avvia la generazione di una nuova recensione ogni 20 secondi
+            setTimeout(generaNuovaRecensione, 20000);
         }
-
-        // Avvia il processo di generazione di recensioni all'avvio
-        iniziaRecensioneCasuale();
-
     </script>
 </head>
-<body>
-    <h1>Recensione di un film q.0</h1>
-    
-    <h2>Recensione casuale</h2>
+<body onload="iniziaRecensioneCasuale()">
+    <h1>Generatore di Recensioni Casuali</h1>
+    <h2 id="numero-iterazioni">Numero di iterazioni: 0</h2>
+    <h3>Recensione casuale:</h3>
     <div id="recensione-casuale"></div>
-    
-    <h2>Genera recensione con ChatGPT</h2>
+    <h3>Elenco delle recensioni dei film:</h3>
     <div id="elenco-recensioni-film"></div>
 </body>
 </html>
